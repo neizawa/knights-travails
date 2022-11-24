@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'pry-byebug'
-
 require_relative 'square'
 
 class Board
@@ -10,7 +8,7 @@ class Board
   def initialize
     @squares = []
     generate_squares
-    get_moves
+    generate_moves
   end
 
   def generate_squares
@@ -21,9 +19,10 @@ class Board
     end
   end
 
-  def get_moves
+  def generate_moves
     @squares.each do |square|
-      potential_moves = get_potential_moves(square)
+      potential_moves = get_potential_moves(square.coordinates[0],
+                                            square.coordinates[1])
       valid_moves = get_valid_moves(potential_moves)
 
       square.moves = @squares.select do |other_square|
@@ -32,16 +31,16 @@ class Board
     end
   end
 
-  def get_potential_moves(square)
+  def get_potential_moves(x, y)
     [
-      [square.coordinates[0] + 2, square.coordinates[1] + 1],
-      [square.coordinates[0] + 2, square.coordinates[1] - 1],
-      [square.coordinates[0] + 1, square.coordinates[1] + 2],
-      [square.coordinates[0] + 1, square.coordinates[1] - 2],
-      [square.coordinates[0] - 2, square.coordinates[1] + 1],
-      [square.coordinates[0] - 2, square.coordinates[1] - 1],
-      [square.coordinates[0] - 1, square.coordinates[1] + 2],
-      [square.coordinates[0] - 1, square.coordinates[1] - 2]
+      [x + 2, y + 1],
+      [x + 2, y - 1],
+      [x + 1, y + 2],
+      [x + 1, y - 2],
+      [x - 2, y + 1],
+      [x - 2, y - 1],
+      [x - 1, y + 2],
+      [x - 1, y - 2]
     ]
   end
 
@@ -49,6 +48,12 @@ class Board
     moves.select do |move|
       move[0].between?(1, 8) &&
         move[1].between?(1, 8)
+    end
+  end
+
+  def find(coordinates)
+    @squares.find do |square|
+      square.coordinates == coordinates
     end
   end
 end
